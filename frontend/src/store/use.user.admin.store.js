@@ -1,0 +1,42 @@
+import { create } from "zustand";
+import axiosInstance from "../lib/axios";
+
+export const useUserAdminStore = create((set, get) => ({
+    user: null,
+    isAuthenticated: false,
+    theme: null,
+    loading: false,
+    news: [],
+    singleNews: {},
+    singlePageLoading:false,
+    
+    getAllNews: async () => {
+        set({ loading: true });
+        try {
+            const response = await axiosInstance.get(`/news`);
+            console.log(response)
+            set({ news: response.data.news, loading: false,});
+        } catch (error) {
+
+        } finally {
+            set({ loading: false })
+        }
+    },
+    getSingleNews: async (newsId) => {
+        set({ singlePageLoading: true });
+        try {
+            const response = await axiosInstance.get(`/news/${newsId}`);
+            set({ singleNews: response.data.news, singlePageLoading: false, });
+        } catch (error) {
+             set({ singlePageLoading: false,
+                singleNews: {}});
+            console.log(error);
+            
+        } finally {
+            set({ singlePageLoaind: false })
+        }
+    },
+
+}));
+
+// export const useUserAdminStore = ()
