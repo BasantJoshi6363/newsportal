@@ -1,5 +1,5 @@
 import express from "express";
-import { createNews, deleteNews, getAllNews, getSingleNews, updateNews } from "../controllers/news.controller.js";
+import { createNews, deleteNews, getAllNews, getNewsByCategory, getSingleNews, updateNews } from "../controllers/news.controller.js";
 import authMiddleware from "../middlewares/auth.middleware.js";
 import upload from "../middlewares/multer.middleware.js";
 
@@ -25,6 +25,7 @@ newsRouter.get("/", getAllNews);
 
 // GET SINGLE NEWS
 newsRouter.get("/:id", getSingleNews);
+newsRouter.get("/cat/:category", getNewsByCategory);
 
 
 // UPDATE NEWS
