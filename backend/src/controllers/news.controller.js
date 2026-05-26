@@ -47,16 +47,35 @@ export const createNews = async (req, res) => {
 // GET ALL NEWS
 export const getAllNews = async (req, res) => {
   try {
-    
+
+    //page
+    const page = parseInt(req.query.page);
+    // console.log(page);
+
+    //limit
+    const limit = req.query.limit;
+
+
+    //skip the calculation
+    const skip = (page - 1) * limit;
+
+
     const news = await News.find()
       .populate("writtenBy", "name email role")
+      .skip(skip)
+      .limit(limit)
       .sort({ createdAt: -1 })
       .lean();
+
+    const total = await News.countDocuments();
 
     res.status(200).json({
       success: true,
       news,
-      
+      currentPage: page,
+      totalPage: Math.ceil(total / limit),
+      totalNews: total
+
     });
   } catch (error) {
     res.status(500).json({
@@ -157,4 +176,24 @@ export const deleteNews = async (req, res) => {
     });
   }
 };
+
+export const getNewsByCategory = async (req, res) => {
+  try {
+    const { category } = req.params;
+    const findNewsByCategory = await News.find({
+      category: category
+    })
+
+    res.status(200).json({
+      success: true,
+      news: findNewsByCategory,
+      message: "news fetched by category"
+    })
+
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+}
 
