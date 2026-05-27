@@ -49,11 +49,11 @@ export const getAllNews = async (req, res) => {
   try {
 
     //page
-    const page = parseInt(req.query.page);
+    const page = parseInt(req.query.page) || 1;
     // console.log(page);
 
     //limit
-    const limit = req.query.limit;
+    const limit = req.query.limit || 10;
 
 
     //skip the calculation
@@ -73,7 +73,7 @@ export const getAllNews = async (req, res) => {
       success: true,
       news,
       currentPage: page,
-      totalPage: Math.ceil(total / limit),
+      totalPages: Math.ceil(total / limit),
       totalNews: total
 
     });

@@ -8,18 +8,21 @@ export const useUserAdminStore = create((set, get) => ({
     loading: false,
     news: [],
     singleNews: {},
-    singlePageLoading:false,
-    
+    singlePageLoading: false,
+    page: 1,
+    totalPage: 1,
+   setCurrentPage : (page)=>set({totalPage:page}),
     getAllNews: async () => {
         set({ loading: true });
         try {
-            const response = await axiosInstance.get(`/news`);
+            const { page } = get();
+            const response = await axiosInstance.get(`/news?page=${page}&limit=10`)
             console.log(response)
-            set({ news: response.data.news, loading: false,});
+            set({ news: response.data.news, loading: false, totalPage: response.data.totalPages });
         } catch (error) {
-
+            set({ loading: false, news: [], totalPage: null })
         } finally {
-            set({ loading: false })
+            set({ loading: false });
         }
     },
     getSingleNews: async (newsId) => {
@@ -28,12 +31,14 @@ export const useUserAdminStore = create((set, get) => ({
             const response = await axiosInstance.get(`/news/${newsId}`);
             set({ singleNews: response.data.news, singlePageLoading: false, });
         } catch (error) {
-             set({ singlePageLoading: false,
-                singleNews: {}});
+            set({
+                singlePageLoading: false,
+                singleNews: {}
+            });
             console.log(error);
-            
+
         } finally {
-            set({ singlePageLoaind: false })
+            set({ singlePageLoading: false })
         }
     },
 

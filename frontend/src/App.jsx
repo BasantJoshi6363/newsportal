@@ -9,11 +9,11 @@ import Navbar from './component/Navbar';
 import Category from './pages/Category';
 
 const App = () => {
-  const { loading, getAllNews,news } = useUserAdminStore();
+  const { loading, getAllNews,news,page } = useUserAdminStore();
   useEffect(()=>{
     getAllNews();
-  },[getAllNews])
-  
+  },[getAllNews,page])
+ 
   return (
     <div className='p-10'>
       {loading && <LoadingSpinner/>}
@@ -21,7 +21,7 @@ const App = () => {
       <Routes>
         <Route path='/' index element={<Home />}></Route>
         <Route path='/news/:id' index element={<SinglePage />}></Route>
-        <Route path='/:category' index element={<Category data={news} />}></Route>
+        <Route path='/:category' element={<Category />}></Route>
         <Route path='*' element={<NotFound />}></Route>
       </Routes>
     </div>
